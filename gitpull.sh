@@ -20,9 +20,6 @@ failed=0
 echo -e "🚀 ${BOLD}Scanning top-level directories for Git repos...${RESET}"
 
 # Find top-level directories (no recursion). Works fine for:
-# - elion
-# - elion-helm-charts
-# - elion-infrastructure
 # - (ignores gitpull.sh because it’s a file)
 for d in */ ; do
   # Skip if not a directory for whatever reason
