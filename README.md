@@ -1,10 +1,10 @@
 
 # 🌀 gitpull.sh – Fetch & Pull All Your Git Repos in One Go
 
-**Keep all your top-level Git repositories fresh with a single command!**
+**Keep all your Git repositories fresh with a single command!**
 This script will:
 
-* 🔍 **Scan** all top-level directories in the current folder
+* 🔍 **Scan** for Git repositories up to a set depth (default: `2`)
 * 📦 **Detect** which ones are Git repositories
 * ⬇️ **Fetch all branches** from all remotes (with pruning)
 * 🔄 **Pull the latest changes** for the currently checked-out branch
@@ -14,6 +14,7 @@ This script will:
 
 ## ✨ Features
 
+* **Configurable search depth** – default is **2 levels deep**
 * **Hands-off updates** – runs through every repo it finds
 * **Safe pulls** – only pulls the branch you’re currently on
 * **Full fetch** – keeps *all* branch refs up-to-date
@@ -29,16 +30,20 @@ If your directory looks like this:
 ```
 .
 ├── project-a/
-├── project-b/
+├── project-b/subproject-b1
+├── project-b/subproject-b2
 ├── project-c/
 └── gitpull.sh
 ```
 
-It will:
+With default depth of `2`, it will find:
 
-1. Run `git fetch --all --prune` in each repo
-2. Run `git pull --rebase --autostash` for the checked-out branch
-3. Skip non-Git folders (or detached HEAD states)
+```
+project-a
+project-b/subproject-b1
+project-b/subproject-b2
+project-c
+```
 
 ---
 
@@ -58,10 +63,21 @@ It will:
 
 ---
 
+## ⚙️ Options
+
+| Option    | Description                | Example                |
+| --------- | -------------------------- | ---------------------- |
+| `-d N`    | Set scan depth to `N`      | `./gitpull.sh -d 3`    |
+| `DEPTH=N` | Set scan depth via env var | `DEPTH=1 ./gitpull.sh` |
+
+**Default depth is 2**.
+
+---
+
 ## 🖥 Example Run
 
 ```
-🚀 Scanning top-level directories for Git repos...
+🚀 Scanning for Git repos (max depth: 2)...
 
 ────────────────────────────────────────────────────────────
 📦 project-a
@@ -72,28 +88,21 @@ origin  git@github.com:user/project-a.git (fetch)
 ✅ Updated project-a (a1b2c3d Fix login bug)
 
 ────────────────────────────────────────────────────────────
-📦 project-c
+📦 project-b/subproject-b1
 🌐 Remotes:
-origin  git@github.com:user/project-c.git (fetch)
+origin  git@github.com:user/subproject-b1.git (fetch)
 ⬇️  git fetch --all --prune
 ⚠️  Detached HEAD — skipping pull (fetch already done).
 
 ────────────────────────────────────────────────────────────
 📊 Summary
-  ✅ Updated: 1
-  ⚠️  Skipped: 1
-  ❌ Failed : 0
+  📁 Repos found: 2
+  ✅ Updated    : 1
+  ⚠️  Skipped     : 1
+  ❌ Failed      : 0
 ────────────────────────────────────────────────────────────
 🎉 All done!
 ```
-
----
-
-## ⚙️ Script Behavior
-
-* **Updated** – Repo was successfully fetched and pulled
-* **Skipped** – Repo isn’t on a branch or isn’t a Git repo
-* **Failed** – Fetch or pull failed (network, conflicts, etc.)
 
 ---
 
@@ -111,12 +120,8 @@ Instead, it **fetches everything** and **pulls only your current branch**.
 
 ## 💡 Tip
 
-You can run this daily in your repos folder to keep everything fresh:
+Run it daily to keep your repos fresh:
 
 ```bash
 0 9 * * * /path/to/gitpull.sh
 ```
-
----
-
-If you’d like, I can also make **a super-short “Quick Start” version** for the README so someone can run it in under 30 seconds without reading all the details. That would be perfect for the top of the file.
