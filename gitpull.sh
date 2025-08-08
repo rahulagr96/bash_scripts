@@ -14,7 +14,7 @@
 set -euo pipefail
 
 # --------- args ---------
-DEPTH="${DEPTH:-2}"
+DEPTH="${DEPTH:-2}"   # change this line for default depth (for depth 1) -> DEPTH="${DEPTH:-1}
 while getopts ":d:h" opt; do
   case "$opt" in
     d) DEPTH="$OPTARG" ;;
